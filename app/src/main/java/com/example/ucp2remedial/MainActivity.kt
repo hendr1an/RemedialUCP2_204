@@ -3,45 +3,24 @@ package com.example.ucp2remedial
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.ucp2remedial.ui.theme.UCP2RemedialTheme
+import androidx.compose.material3.Surface
+import com.example.ucp2remedial.data.AppDatabase
+import com.example.ucp2remedial.data.LibraryRepository
+import com.example.ucp2remedial.ui.LibraryViewModel
+import com.example.ucp2remedial.ui.MainScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+
+        val database = AppDatabase.getDatabase(this)
+        val repository = LibraryRepository(database.libraryDao())
+        val viewModel = LibraryViewModel(repository)
+
         setContent {
-            UCP2RemedialTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+            Surface {
+                MainScreen(viewModel = viewModel)
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    UCP2RemedialTheme {
-        Greeting("Android")
     }
 }
