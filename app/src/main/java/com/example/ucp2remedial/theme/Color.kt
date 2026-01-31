@@ -1,4 +1,4 @@
-package com.example.ucp2remedial.ui.theme
+package com.example.ucp2remedial.theme
 
 import androidx.compose.ui.graphics.Color
 
