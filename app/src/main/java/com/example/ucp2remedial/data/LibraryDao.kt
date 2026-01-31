@@ -3,7 +3,7 @@ package com.example.ucp2remedial.data
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import androidx.room.Transaction
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface LibraryDao {
@@ -14,10 +14,19 @@ interface LibraryDao {
     suspend fun insertBook(book: Book)
 
     @Insert
+    suspend fun insertAuthor(author: Author)
+
+    @Insert
     suspend fun insertAudit(log: AuditLog)
 
-    @Query("SELECT * FROM categories WHERE isDeleted = 0")
-    suspend fun getAllCategories(): List<Category>
+    @Query("SELECT * FROM categories WHERE isDeleted = 0 ORDER BY name ASC")
+    fun getAllCategories(): Flow<List<Category>>
+
+    @Query("SELECT * FROM books WHERE isDeleted = 0 ORDER BY title ASC")
+    fun getAllBooks(): Flow<List<Book>>
+
+    @Query("SELECT * FROM authors ORDER BY name ASC")
+    fun getAllAuthors(): Flow<List<Author>>
 
     @Query("SELECT * FROM books WHERE categoryId = :categoryId AND isDeleted = 0")
     suspend fun getBooksByCategory(categoryId: Long): List<Book>
