@@ -8,16 +8,20 @@ class LibraryRepository(private val dao: LibraryDao) {
     fun getAllBooks(): Flow<List<Book>> = dao.getAllBooks()
     fun getAllAuthors(): Flow<List<Author>> = dao.getAllAuthors()
 
-    suspend fun addCategory(name: String) {
-        val category = Category(name = name)
+    suspend fun addCategory(name: String, parentId: Long?) {
+        val category = Category(name = name, parentId = parentId)
         dao.insertCategory(category)
     }
 
-    suspend fun addBook(title: String, status: String, categoryId: Long?) {
+    suspend fun addBook(title: String, status: String, categoryId: Long?, authorIds: List<Long>) {
         val book = Book(title = title, status = status, categoryId = categoryId)
-        dao.insertBook(book)
-    }
+        val bookId = dao.insertBook(book)
 
+        authorIds.forEach { authId ->
+            val crossRef = BookAuthorCrossRef(bookId, authId)
+            dao.insertBookAuthorCrossRef(crossRef)
+        }
+    }
     suspend fun addAuthor(name: String) {
         val author = Author(name = name)
         dao.insertAuthor(author)
