@@ -2,21 +2,25 @@ package com.example.ucp2remedial.data
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface LibraryDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertCategory(category: Category)
 
-    @Insert
-    suspend fun insertBook(book: Book)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertBook(book: Book): Long
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAuthor(author: Author)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertBookAuthorCrossRef(crossRef: BookAuthorCrossRef)
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAudit(log: AuditLog)
 
     @Query("SELECT * FROM categories WHERE isDeleted = 0 ORDER BY name ASC")
